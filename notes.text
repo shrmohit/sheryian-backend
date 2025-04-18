@@ -1,0 +1,20 @@
+1.setting up parser for from
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+2.setting up public static files
+static files mean -> images,video,stylesheet,javascripts
+_dirname -> means it show current path folder tak
+path.join means + (_dirname + /public)
+
+dynamic routing
+     dynamic routing
+     sabse pahle brower par jaao
+     url likhiye apna jo chahiye and enter dabaaiye
+     ab us url route ko create kariye
+     res bhejiye kuch bhi 
+
+     ==> ab usi url ko agar dynamic banaana hai to realise karo konsa part dynamic hai to us part ke aage route mein : lagado 
+
+     how to get data coming from frontend at backend route
