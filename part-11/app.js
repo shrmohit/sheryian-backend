@@ -20,6 +20,13 @@ app.get("/create", async (req, res) => {
   console.log(createduser);
 });
 
+//read
+app.get("/read", async (req, res) => {
+  let readuser = await userModel.find({}); // find() give array of objects ,findOne() give single object
+  console.log(readuser);
+  res.send(readuser);
+});
+
 //update
 app.get("/update", async (req, res) => {
   // userModel.findOneAndUpdate(findOne,update,{new:true})
@@ -30,19 +37,14 @@ app.get("/update", async (req, res) => {
   );
 
   console.log(updateuser);
+  res.send(updateuser);
 });
 
 // delete
 app.get("/delete", async (req, res) => {
   let deleteuser = await userModel.findOneAndDelete({ username: "harsh" });
   console.log(deleteuser);
-});
-
-//read
-app.get("/read", async (req, res) => {
-  let readuser = await userModel.find({}); // find() give array of objects ,findOne() give single object
-  console.log(readuser);
-  res.send(readuser);
+  res.send(deleteuser);
 });
 
 app.listen(3000, () => {
