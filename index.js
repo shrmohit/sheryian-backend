@@ -28,19 +28,23 @@ app.post("/create", (req, res) => {
 
 app.get("/file/:filename", (req, res) => {
   fs.readFile(`./files/${req.params.filename}`, "utf-8", (err, filedata) => {
-    res.render("show");
+    res.render("show", { filedata: filedata, filename: req.params.filename });
   });
 });
 
-// app.post("/edit", (req, res) => {
-//   fs.rename(
-//     `./files/${req.body.title.split(" ").join("")}.txt`,
-//     req.body.details,
-//     (err) => {
-//       res.redirect("/");
-//     }
-//   );
-// });
+app.get("/edit/:filename", (req, res) => {
+  res.render("edit", { filename: req.params.filename });
+});
+
+app.post("/edit", (req, res) => {
+  fs.rename(
+    `./files/${req.body.prevousname}`,
+    `./files/${req.body.newname}`,
+    (err) => {
+      res.redirect("/");
+    }
+  );
+});
 
 app.listen(3000, () => {
   console.log(`Server running at http://localhost:${3000}`);

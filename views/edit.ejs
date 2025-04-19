@@ -14,28 +14,34 @@
     />
   </head>
   <body>
-    <div class="main w-full bg-zinc-900 min-h-screen">
+    <div class="main w-full bg-zinc-900 min-h-screen p-10">
+      <a
+        href="/"
+        class="text-blue-900"
+        >Go To Home</a
+      >
       <div class="form p-10">
         <form
-          action="/edit/<%= val%>"
+          action="/edit"
           method="post"
         >
           <input
             type="text"
-            placeholder="Title"
-            class="block px-5 -y-2 bg-zinc-800 w-full text-white rounded-md"
-            name="title"
+            placeholder="Prevous Name"
+            class="block px-5 -y-2 bg-zinc-800 w-full text-white rounded-md mt-5"
+            value="<%= filename %>"
+            name="prevousname"
           />
-          <textarea
-            placeholder="description"
-            class="block px-5 -y-2 bg-zinc-800 w-full mt-5 resize-none text-white rounded-md"
-            name="details"
-            id=""
-          ></textarea>
+          <input
+            type="text"
+            placeholder="New"
+            class="block px-5 -y-2 bg-zinc-800 w-full text-white rounded-md mt-5"
+            name="newname"
+          />
           <input
             type="submit"
-            class="mt-5 bg-blue-900 text-white rounded-md px-2 py-2"
-            value="Create task"
+            class="mt-5 bg-yellow-900 text-white rounded-md px-2 py-2"
+            value="Update task"
           />
         </form>
       </div>
