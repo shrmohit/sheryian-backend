@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      rel="stylesheet"
+      href="/stylesheets/style.css"
+    />
+  </head>
+  <body>
+    <div class="w-full h-full bg-zinc-900 p-10 text-white flex flex-col">
+      <a href="/read">Read All User</a>
+      <h1 class="text-3xl tracking-tighter mb-3">Create User</h1>
+      <form
+        action="/update/<%= users._id %>"
+        method="post"
+      >
+        <input
+          type="text"
+          placeholder="Name"
+          class="px-5 py-3 bg-transparent border-2 outline-none rounded-lg bg-transparent"
+          name="name"
+          value="<%= users.name %>"
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          class="px-5 py-3 bg-transparent border-2 outline-none rounded-lg bg-transparent"
+          name="email"
+          value="<%= users.email %>"
+        />
+        <input
+          type="text"
+          placeholder="Imageurl"
+          class="px-5 py-3 bg-transparent border-2 outline-none rounded-lg bg-transparent"
+          name="image"
+        />
+        <input
+          type="submit"
+          value="Update User"
+          class="px-5 py-3 bg-yellow-500 border-2 outline-none rounded-lg"
+        />
+      </form>
+    </div>
+    <script src="/javascripts/index.js"></script>
+  </body>
+</html>
