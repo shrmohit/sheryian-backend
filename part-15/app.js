@@ -21,6 +21,7 @@ app.post("/create", (req, res) => {
   //password hid
   bcrypt.genSalt(10, (err, Salt) => {
     bcrypt.hash(password, Salt, async (err, hash) => {
+      console.log(hash);
       let userCreate = await userModel.create({
         username,
         email,
@@ -37,7 +38,21 @@ app.post("/create", (req, res) => {
   });
 });
 
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+app.post("/login", async (req, res) => {
+  let user = await userModel.findOne({ email: req.body.email });
+  if (!user) return res.send("Something went wrong");
+  console.log(user.password, req.body.password);
+  bcrypt.compare(req.body.password, user.password, (err, result) => {
+    console.log(result);
+  });
+});
+
 app.get("/logout", (req, res) => {
+  console.log(token);
   res.cookie("token", "");
   res.redirect("/");
 });
