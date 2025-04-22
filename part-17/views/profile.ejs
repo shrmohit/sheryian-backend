@@ -49,11 +49,15 @@
           >
             <h4 class="text-sm tracking-tight"><%= post.username %></h4>
             <p class="text-sm tracking-tight"><%= post.content %></p>
+            <small class="mt-2 inline-block"
+              ><%= post.likes.length %>Like</small
+            >
             <div class="btns flex mt-5 justify-between">
               <a
                 class="text-blue-500"
-                href=""
-                >like</a
+                href="/like/<%= post._id%>"
+                ><%= post.likes.indexOf(user._id) === -1 ? "like" :
+                "UnLike"%></a
               >
               <a
                 class="text-zinc-500"
