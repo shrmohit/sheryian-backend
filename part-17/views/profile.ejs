@@ -56,12 +56,11 @@
               <a
                 class="text-blue-500"
                 href="/like/<%= post._id%>"
-                ><%= post.likes.indexOf(user._id) === -1 ? "like" :
-                "UnLike"%></a
-              >
+                ><%= post.likes.includes(user._id) ? "UnLike" : "Like" %>
+              </a>
               <a
                 class="text-zinc-500"
-                href=""
+                href="/edit/<%= post._id>"
                 >Edit</a
               >
             </div>
