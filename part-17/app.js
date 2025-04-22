@@ -19,54 +19,6 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
-app.get("/profile", isLoggedIn, async (req, res) => {
-  let user = await userModel
-    .findOne({ email: req.user.email })
-    .populate("posts");
-  console.log(user);
-  res.render("profile", { user });
-});
-
-app.post("/post", isLoggedIn, async (req, res) => {
-  let user = await userModel.findOne({ email: req.user.email });
-  const { content } = req.body;
-  let post = await postModel.create({
-    user: user._id,
-    content: content,
-  });
-
-  user.posts.push(post._id);
-  //hand change save through this
-  await user.save();
-  res.redirect("/profile");
-});
-
-app.get("/edit/:id", isLoggedIn, async (req, res) => {
-  let post = await postModel.findOne({ _id: req.params.id }).populate("post");
-  res.render("edit", { post });
-});
-
-app.post("/update/:id", isLoggedIn, async (req, res) => {
-  let post = await postModel.findOneAndUpdate(
-    { _id: req.params.id },
-    { content: req.body.content }
-  );
-
-  res.redirect("/profile");
-});
-
-app.get("/like/:id", isLoggedIn, async (req, res) => {
-  let post = await postModel.findOne({ _id: req.params.id }).populate("user");
-
-  if (post.likes.indexOf(req.user.userid) == -1) {
-    post.likes.push(req.user.userid);
-  } else {
-    post.likes.splice(post.likes.indexOf(req.user.userid), 1);
-  }
-  await post.save();
-  res.redirect("/profile");
-});
-
 app.post("/register", async (req, res) => {
   let { username, name, email, password, age } = req.body;
   let user = await userModel.findOne({ email });
@@ -111,14 +63,14 @@ app.get("/logout", (req, res) => {
 });
 
 // middleware for protected route ke liye
-function isLoggedIn(req, res, next) {
-  if (req.cookies?.token === "") res.send("You must be logged in");
-  else {
-    let data = jwt.verify(req.cookies?.token, "shhhh");
-    req.user = data;
-  }
-  next();
-}
+// function isLoggedIn(req, res, next) {
+//   if (req.cookies?.token === "") return res.send("You must be logged in");
+//   else {
+//     let data = jwt.verify(req.cookies?.token, "shhhh");
+//     req.user = data;
+//   }
+//   next();
+// }
 
 app.listen(3000, () => {
   console.log(`Server is running http://localhost:3000`);
