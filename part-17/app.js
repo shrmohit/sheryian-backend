@@ -19,6 +19,28 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
+app.get("/profile", isLoggedIn, async (req, res) => {
+  let user = await userModel
+    .findOne({ email: req.user.email })
+    .populate("posts");
+  console.log(user);
+
+  res.render("profile", { user });
+});
+
+app.post("/post", isLoggedIn, async (req, res) => {
+  // niche wali line btati hai ki kon sa user login hai
+  let user = await userModel.findOne({ email: req.user.email });
+  let { content } = req.body;
+  let post = await postModel.create({
+    user: user._id,
+    content: content,
+  });
+  user.posts.push(post._id);
+  await user.save();
+  res.redirect("/profile");
+});
+
 app.post("/register", async (req, res) => {
   let { username, name, email, password, age } = req.body;
   let user = await userModel.findOne({ email });
@@ -33,7 +55,7 @@ app.post("/register", async (req, res) => {
         password: hash,
         age,
       });
-      let token = jwt.sign({ email: email }, "shhhh");
+      let token = jwt.sign({ email: email, userid: userCreated._id }, "shhhh");
       res.cookie("token", token);
       res.send("registered");
     });
@@ -50,7 +72,7 @@ app.post("/login", async (req, res) => {
     if (result) {
       let token = jwt.sign({ email: email }, "shhhh");
       res.cookie("token", token);
-      res.status(200).send("you can login");
+      res.status(200).redirect("/profile");
     } else res.redirect("/login");
   });
 });
@@ -58,19 +80,22 @@ app.post("/login", async (req, res) => {
 app.get("/logout", (req, res) => {
   // cookie ko remove karna hota hai
   res.cookie("token", "");
-  res.send("you logout");
+  res.redirect("/login");
   // res.redirect("/login");
 });
 
 // middleware for protected route ke liye
-// function isLoggedIn(req, res, next) {
-//   if (req.cookies?.token === "") return res.send("You must be logged in");
-//   else {
-//     let data = jwt.verify(req.cookies?.token, "shhhh");
-//     req.user = data;
-//   }
-//   next();
-// }
+function isLoggedIn(req, res, next) {
+  if (req.cookies.token === "") return res.redirect("/login");
+
+  try {
+    let data = jwt.verify(req.cookies.token, "shhhh");
+    req.user = data;
+    next();
+  } catch (err) {
+    return res.status(401).send("Invalid token");
+  }
+}
 
 app.listen(3000, () => {
   console.log(`Server is running http://localhost:3000`);
