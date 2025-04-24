@@ -8,30 +8,17 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const crypto = require("crypto");
 const path = require("path");
+const upload = require("./config/multerconfig");
 
 app.set("view engine", "ejs");
 app.use(cookiesParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
 
 // crypto.randomBytes(12, (err, bytes) => {
 //   console.log(bytes.toString("hex"));
 // });
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./public/images/upload"); // file saving path
-  },
-  filename: function (req, file, cb) {
-    crypto.randomBytes(12, (err, bytes) => {
-      const fn = bytes.toString("hex") + path.extname(file.originalname);
-      // path.extname(file.originalname) is code se file ka extention bahar aajye ga
-      cb(null, fn);
-    });
-  },
-});
-
-const upload = multer({ storage: storage });
 
 app.get("/", (req, res) => {
   res.render("index");
@@ -41,11 +28,15 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
-app.get("/test", (req, res) => {
-  res.render("test");
+app.get("/profile/upload", (req, res) => {
+  res.render("profileupload");
 });
 
-app.post("/upload", upload.single("image"), (req, res) => {
+app.post("/upload", isLoggedIn, upload.single("image"), async (req, res) => {
+  let user = await userModel.findOne({ email: req.user.email });
+  user.profilepic = req.file.filename;
+  await user.save();
+  res.redirect("/profile");
   console.log(req.file);
 });
 
